@@ -1,7 +1,16 @@
-from fastapi import FastAPI  # type: ignore 
+from fastapi import FastAPI  # type: ignore
+import models
+from database import engine
+from routers import entreprise # On importe ton router
 
-app = FastAPI(title="PFE Gestion de Stages API")
+# Crée les tables dans MySQL automatiquement
+models.Base.metadata.create_all(bind=engine)
+
+app = FastAPI(title="PFE API")
+
+# ON INCLUT TES ROUTES
+app.include_router(entreprise.router)
 
 @app.get("/")
-def read_root():
-    return {"message": "Bienvenue sur l'API de gestion des stages"}
+def home():
+    return {"message": "Bienvenue sur l'API PFE"}
