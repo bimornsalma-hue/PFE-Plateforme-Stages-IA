@@ -6,18 +6,13 @@ from database import get_db
 router = APIRouter(prefix="/admin", tags=["Administration"])
 
 @router.get("/stats-globales")
-def stats_globales(db: Session = Depends(get_db)):
-    # L'Admin voit TOUT
-    total_etudiants = db.query(models.Etudiant).count()
-    total_entreprises = db.query(models.Entreprise).count()
-    total_offres = db.query(models.OffreStage).count()
-    total_candidatures = db.query(models.Candidature).count()
-    
+def obtenir_stats_globales(db: Session = Depends(get_db)):
+    # On compte chaque table
     return {
-        "etudiants": total_etudiants,
-        "entreprises": total_entreprises,
-        "offres": total_offres,
-        "candidatures": total_candidatures
+        "total_etudiants": db.query(models.Etudiant).count(),
+        "total_entreprises": db.query(models.Entreprise).count(),
+        "total_offres": db.query(models.OffreStage).count(),
+        "total_competences": db.query(models.Competence).count() # Indispensable pour la 4ème carte
     }
 
 @router.get("/utilisateurs")

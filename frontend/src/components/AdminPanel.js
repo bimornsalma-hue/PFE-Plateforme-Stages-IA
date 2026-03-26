@@ -28,7 +28,7 @@ const AdminPanel = () => {
                 <StatCard label="Étudiants" val={stats.total_etudiants} color="border-blue-500" />
                 <StatCard label="Entreprises" val={stats.total_entreprises} color="border-purple-500" />
                 <StatCard label="Offres" val={stats.total_offres} color="border-orange-500" />
-                <StatCard label="Mots-clés IA" val={stats.total_competences} color="border-emerald-500" />
+                <StatCard label="Compétences" val={stats.total_competences} color="border-emerald-500" />
             </div>
 
             {/* GESTION DU DICTIONNAIRE IA */}

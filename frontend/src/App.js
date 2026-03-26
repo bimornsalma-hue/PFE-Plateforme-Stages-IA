@@ -8,7 +8,7 @@ function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [stats, setStats] = useState({ offres: 0, candidats: 0, moyenne: '0%' });
   // Simuler l'utilisateur connecté (Tu peux changer 'entreprise' par 'admin' pour tester)
-  const [user, setUser] = useState({ nom: "Salma", role: "entreprise" });
+  const [user, setUser] = useState({ nom: "Salma", role: "admin" });
   // ALLER CHERCHER LES VRAIES STATS DEPUIS PYTHON
   useEffect(() => {
     const fetchStats = async () => {
