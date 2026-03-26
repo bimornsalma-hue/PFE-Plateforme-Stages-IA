@@ -1,15 +1,38 @@
 from pydantic import BaseModel # type: ignore
-from typing import Optional
+from typing import List, Optional
+from datetime import datetime
 
-# Ce qu'on reçoit de React quand on crée une offre
+# Schéma pour les compétences
+class CompetenceSchema(BaseModel):
+    id: int
+    nom: str
+    class Config: from_attributes = True
+
+# Schéma pour créer une offre
 class OffreCreate(BaseModel):
     titre: str
     description: str
     ville: str
     duree: str
+    competences_ids: List[int] # Liste d'IDs des compétences requises
 
-# Ce qu'on renvoie à React
-class OffreResponse(OffreCreate):
+# Schéma de réponse pour une offre
+class OffreResponse(BaseModel):
     id: int
-    class Config:
-        from_attributes = True
+    titre: str
+    description: str
+    ville: str
+    duree: str
+    date_pub: datetime
+    competences: List[CompetenceSchema]
+    class Config: from_attributes = True
+
+# Schéma pour voir un candidat avec son score IA
+class CandidatResponse(BaseModel):
+    candidature_id: int
+    etudiant_id: int
+    nom: str
+    prenom: str
+    email: str
+    statut: str
+    score_ia: float
