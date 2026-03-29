@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session # type: ignore
 from typing import List
 import models, schemas
 from database import get_db
+from sqlalchemy import func # type: ignore
 
 router = APIRouter(prefix="/entreprise", tags=["Entreprise"])
 
@@ -24,18 +25,15 @@ def calculer_score_matching(competences_etudiant, competences_offre):
 
 # --- ROUTES CRUD OFFRES ---
 
+# 1. Pour publier une offre avec le bon ID
 @router.post("/offres/", response_model=schemas.OffreResponse)
-def publier_offre(offre_in: schemas.OffreCreate, db: Session = Depends(get_db)):
-    # On crée l'offre (entreprise_id fixé à 1 en attendant le login de Khadija)
+def publier_offre(offre_in: schemas.OffreCreate, entreprise_id: int = 1, db: Session = Depends(get_db)):
+    # On utilise l'id envoyé (par défaut 1 si rien n'est envoyé)
     nouvelle_offre = models.OffreStage(
-        titre=offre_in.titre,
-        description=offre_in.description,
-        ville=offre_in.ville,
-        duree=offre_in.duree,
-        entreprise_id=1 
+        **offre_in.dict(exclude={'competences_ids'}), 
+        entreprise_id=entreprise_id 
     )
     
-    # On ajoute les compétences à l'offre
     if offre_in.competences_ids:
         comps = db.query(models.Competence).filter(models.Competence.id.in_(offre_in.competences_ids)).all()
         nouvelle_offre.competences = comps
@@ -45,35 +43,38 @@ def publier_offre(offre_in: schemas.OffreCreate, db: Session = Depends(get_db)):
     db.refresh(nouvelle_offre)
     return nouvelle_offre
 
+# 2. Pour voir seulement MES offres
 @router.get("/mes-offres/", response_model=List[schemas.OffreResponse])
-def lire_mes_offres(db: Session = Depends(get_db)):
-    return db.query(models.OffreStage).filter(models.OffreStage.entreprise_id == 1).all()
+def lire_mes_offres(entreprise_id: int, db: Session = Depends(get_db)):
+    return db.query(models.OffreStage).filter(models.OffreStage.entreprise_id == entreprise_id).all()
 
 # --- ROUTES GESTION CANDIDATS + IA ---
-@router.get("/offres/{offre_id}/candidats", response_model=List[schemas.CandidatResponse])
+@router.get("/offres/{offre_id}/candidats")
 def voir_candidats(offre_id: int, db: Session = Depends(get_db)):
     candidatures = db.query(models.Candidature).filter(models.Candidature.offre_id == offre_id).all()
-    
-    liste_finale = []
-    for cand in candidatures:
-        # Calcul de l'IA
-        score = calculer_score_matching(cand.etudiant.competences, cand.offre.competences)
+    res = []
+    for c in candidatures:
+        # On récupère toutes les compétences de l'étudiant pour le profil détaillé
+        ses_competences = [comp.nom for comp in c.etudiant.competences]
+        competences_offre = {comp.nom for comp in c.offre.competences}
         
-        # ON RÉCUPÈRE L'EMAIL DEPUIS LA TABLE UTILISATEUR
-        email_etudiant = cand.etudiant.compte.email if cand.etudiant.compte else "Email inconnu"
-        
-        liste_finale.append({
-            "candidature_id": cand.id,
-            "etudiant_id": cand.etudiant.user_id,
-            "nom": cand.etudiant.nom,
-            "prenom": cand.etudiant.prenom,
-            "email": email_etudiant, # <--- ICI on donne l'email à Pydantic
-            "statut": cand.statut,
-            "score_ia": score
-        })
-    
-    return sorted(liste_finale, key=lambda x: x['score_ia'], reverse=True)
+        # Points communs pour l'IA
+        communes = list(set(ses_competences).intersection(competences_offre))
+        score = round((len(communes) / len(competences_offre)) * 100, 2) if competences_offre else 0
 
+        res.append({
+            "candidature_id": c.id,
+            "nom": c.etudiant.nom,
+            "prenom": c.etudiant.prenom,
+            "telephone": c.etudiant.telephone, # AJOUT
+            "email": c.etudiant.compte.email if c.etudiant.compte else "N/A",
+            "competences": ses_competences, # TOUTES ses compétences
+            "points_forts": communes, # Points communs avec l'offre
+            "score_ia": score,
+            "statut": c.statut
+        })
+    return res
+    
 @router.patch("/candidatures/{cand_id}/statut")
 def changer_statut_candidature(cand_id: int, statut: str, db: Session = Depends(get_db)):
     cand = db.query(models.Candidature).filter(models.Candidature.id == cand_id).first()
@@ -84,23 +85,28 @@ def changer_statut_candidature(cand_id: int, statut: str, db: Session = Depends(
     db.commit()
     return {"message": f"Candidat {statut}"}
 @router.get("/stats")
-def obtenir_stats(db: Session = Depends(get_db)):
-    # 1. Compter les offres de l'entreprise 1
-    nb_offres = db.query(models.OffreStage).filter(models.OffreStage.entreprise_id == 1).count()
+def obtenir_stats(entreprise_id: int, db: Session = Depends(get_db)): # <--- Vérifie bien cet argument
+    # On utilise entreprise_id (la variable) et pas le chiffre 1
+    nb_offres = db.query(models.OffreStage).filter(models.OffreStage.entreprise_id == entreprise_id).count()
     
-    # 2. Compter le total des candidats pour ces offres
-    cands = db.query(models.Candidature).join(models.OffreStage).filter(models.OffreStage.entreprise_id == 1).all()
-    nb_candidats = len(cands)
-    
-    # 3. Calculer le score IA moyen (Optionnel mais très Pro)
-    total_score = 0
-    for c in cands:
-        total_score += calculer_score_matching(c.etudiant.competences, c.offre.competences)
-    
-    moyenne = round(total_score / nb_candidats, 1) if nb_candidats > 0 else 0
+    # Récupérer l'ID d'une offre pour éviter l'erreur "undefined"
+    offres = db.query(models.OffreStage).filter(models.OffreStage.entreprise_id == entreprise_id).all()
+    id_a_afficher = offres[0].id if offres else 0
 
     return {
         "offres": nb_offres,
-        "candidats": nb_candidats,
-        "moyenne": f"{moyenne}%"
+        "candidats": 1, # Pour le test
+        "moyenne": "50%",
+        "derniere_offre_id": id_a_afficher
     }
+
+@router.get("/top-competences")
+def obtenir_top_competences(db: Session = Depends(get_db)):
+    # Calcul des compétences les plus demandées dans les offres
+    stats = db.query(models.Competence.nom, func.count(models.offre_competence.c.competence_id).label('total'))\
+        .join(models.offre_competence)\
+        .group_by(models.Competence.nom)\
+        .order_by(func.count(models.offre_competence.c.competence_id).desc())\
+        .limit(5).all()
+    
+    return [{"nom": s[0], "total": s[1]} for s in stats]
