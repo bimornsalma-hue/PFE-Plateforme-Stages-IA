@@ -30,7 +30,6 @@ class Etudiant(Base):
     nom = Column(String(100))
     prenom = Column(String(100))
     telephone = Column(String(20))
-    cv_url = Column(String(255))
     
     # Relations
     compte = relationship("Utilisateur", foreign_keys=[user_id])
@@ -45,7 +44,7 @@ class Entreprise(Base):
     site_web = Column(String(255))
     ville = Column(String(100))
     adresse = Column(String(255))
-    
+    telephone = Column(String(20))
     offres = relationship("OffreStage", back_populates="proprietaire")
 
 class OffreStage(Base):

@@ -87,9 +87,18 @@ def supprimer_offre_admin(offre_id: int, db: Session = Depends(get_db)):
 
 @router.get("/stats-villes")
 def obtenir_stats_villes(db: Session = Depends(get_db)):
-    # On groupe par ville et on compte les IDs d'offres
-    stats = db.query(models.OffreStage.ville, func.count(models.OffreStage.id))\
-        .group_by(models.OffreStage.ville)\
-        .order_by(func.count(models.OffreStage.id).desc()).all()
+    # Compte les offres par ville
+    result = db.query(models.OffreStage.ville, func.count(models.OffreStage.id))\
+               .group_by(models.OffreStage.ville).all()
     
-    return [{"ville": s[0] if s[0] else "Non précisé", "count": s[1]} for s in stats]
+    return [{"ville": r[0], "count": r[1]} for r in result]
+@router.get("/top-competences") # Note: cette route peut aussi être dans entreprise.py
+def obtenir_top_competences(db: Session = Depends(get_db)):
+    # Cherche les compétences les plus citées dans les offres
+    from models import offre_competence
+    stats = db.query(models.Competence.nom, func.count(offre_competence.c.competence_id))\
+        .join(offre_competence)\
+        .group_by(models.Competence.nom)\
+        .order_by(func.count(offre_competence.c.competence_id).desc())\
+        .limit(5).all()
+    return [{"nom": s[0], "total": s[1]} for s in stats]

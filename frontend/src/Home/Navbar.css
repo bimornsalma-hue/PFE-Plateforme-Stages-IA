@@ -1,0 +1,52 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 80px;
+  background-color: white;
+  position: sticky; /* Reste en haut quand on scroll */
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.navbar-logo {
+  font-weight: 800;
+  font-size: 22px;
+  color: #333;
+  cursor: pointer;
+}
+
+.navbar-links {
+  display: flex;
+  list-style: none;
+  gap: 30px;
+}
+
+.navbar-links li {
+  text-decoration: none;
+  color: #444;
+  font-weight: 500;
+  cursor: pointer;
+  transition: 0.3s;
+  font-size: 16px;
+}
+
+.navbar-links li:hover {
+  color: #7d4b5e; /* Couleur bordeaux de la vidéo */
+}
+
+.btn-commencer {
+  background-color: #7d4b5e;
+  color: white;
+  border: none;
+  padding: 10px 25px;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn-commencer:hover {
+  background-color: #5a3644;
+}

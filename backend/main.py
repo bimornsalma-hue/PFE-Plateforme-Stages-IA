@@ -4,6 +4,8 @@ import models
 from database import engine
 from routers import entreprise # On importe ton router
 from routers import admin
+from routers import auth
+from routers import  etudiant # AJOUTE 'etudiant' ICI
 
 # Crée les tables dans MySQL automatiquement
 models.Base.metadata.create_all(bind=engine)
@@ -28,7 +30,8 @@ app.add_middleware(
 # ON INCLUT TES ROUTES
 app.include_router(entreprise.router)
 app.include_router(admin.router)
-
+app.include_router(auth.router)
+app.include_router(etudiant.router)
 @app.get("/")
 def home():
     return {"message": "Bienvenue sur l'API PFE"}
