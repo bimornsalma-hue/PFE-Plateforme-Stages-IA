@@ -1,9 +1,9 @@
-from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy.orm import Session
+from fastapi import APIRouter, Depends, HTTPException, status # type: ignore
+from sqlalchemy.orm import Session # type: ignore
 from typing import List
 import models, schemas
 from database import get_db
-from sqlalchemy import func
+from sqlalchemy import func # type: ignore
 
 router = APIRouter(prefix="/entreprise", tags=["Entreprise"])
 

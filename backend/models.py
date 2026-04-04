@@ -1,5 +1,5 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, Enum, Text, DateTime, Table, Float
-from sqlalchemy.orm import relationship
+from sqlalchemy import Column, Integer, String, ForeignKey, Enum, Text, DateTime, Table, Float # type: ignore
+from sqlalchemy.orm import relationship # type: ignore
 from database import Base
 import datetime
 
