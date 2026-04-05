@@ -2,10 +2,10 @@ from fastapi import FastAPI  # type: ignore
 from fastapi.middleware.cors import CORSMiddleware # type: ignore
 import models
 from database import engine
-from routers import entreprise # On importe ton router
+from routers import entreprise 
 from routers import admin
 from routers import auth
-from routers import  etudiant # AJOUTE 'etudiant' ICI
+from routers import  etudiant 
 
 # Crée les tables dans MySQL automatiquement
 models.Base.metadata.create_all(bind=engine)
