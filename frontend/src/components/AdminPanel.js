@@ -62,10 +62,22 @@ const AdminPanel = () => {
         <div className="space-y-8 pb-10">
             {/* 1. GESTION COMPETENCES */}
             <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
-                <h3 className="font-bold mb-4 flex items-center text-emerald-600"><ShieldCheck className="mr-2"/> Enrichir le dictionnaire IA</h3>
+                <h3 className="font-bold mb-4 flex items-center text-[#7d4b5e]">
+                    <ShieldCheck className="mr-2"/> Ajouter les compétences pour enrichir le système
+                </h3>
                 <div className="flex gap-2">
-                    <input value={newComp} onChange={(e)=>setNewComp(e.target.value)} className="flex-1 p-3 border rounded-lg outline-none focus:ring-2 focus:ring-emerald-500" placeholder="Ex: Docker, Machine Learning..."/>
-                    <button onClick={handleAddComp} className="bg-emerald-600 text-white px-8 py-3 rounded-lg font-bold transition hover:bg-emerald-700">+Ajouter</button>
+                <input 
+                        value={newComp} 
+                        onChange={(e)=>setNewComp(e.target.value)} 
+                        className="flex-1 p-3 border rounded-xl outline-none focus:ring-2 focus:ring-[#7d4b5e] transition-all" 
+                        placeholder="Ex: Docker, Machine Learning, Comptabilité..."
+                    />
+                    <button 
+                        onClick={handleAddComp} 
+                        className="bg-[#7d4b5e] text-white px-8 py-3 rounded-xl font-bold transition hover:bg-[#5a3644] shadow-md flex items-center"
+                    >
+                        <Plus size={18} className="mr-1"/> Ajouter
+                    </button>
                 </div>
             </div>
 

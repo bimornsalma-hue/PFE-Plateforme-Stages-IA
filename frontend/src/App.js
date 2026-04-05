@@ -123,7 +123,7 @@ function App() {
       
       {/* SIDEBAR BORDEAUX */}
       <div className="w-64 bg-[#5a3644] text-white flex flex-col shadow-2xl">
-        <div className="p-6 text-xl font-black border-b border-[#7d4b5e] tracking-tighter uppercase">STAGEIA <span className="text-slate-300">PRO</span></div>
+        <div className="p-6 text-xl font-black border-b border-[#7d4b5e] tracking-tighter uppercase">Gestion des stages </div>
         <nav className="flex-1 p-4 space-y-2 mt-4">
           <button onClick={() => setActiveTab('dashboard')} className={`flex items-center w-full p-3 rounded-lg transition-all ${activeTab === 'dashboard' ? 'bg-[#7d4b5e] shadow-lg' : 'hover:bg-[#8e5c6f]'}`}><LayoutDashboard className="mr-3 w-5 h-5" /> Dashboard</button>
           
