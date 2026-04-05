@@ -127,6 +127,6 @@ def obtenir_top_competences(db: Session = Depends(get_db)):
         .join(offre_competence)\
         .group_by(models.Competence.nom)\
         .order_by(func.count(offre_competence.c.competence_id).desc())\
-        .limit(5).all()
+        .limit(15).all()
     
     return [{"nom": s[0], "total": s[1]} for s in stats]
