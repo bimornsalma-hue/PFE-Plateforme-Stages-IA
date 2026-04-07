@@ -14,7 +14,7 @@ class OffreCreate(BaseModel):
     description: str
     ville: str
     duree: str
-    competences_ids: List[int] # Liste d'IDs des compétences requises
+    competences_ids: List[int] 
 
 # Schéma de réponse pour une offre
 class OffreResponse(BaseModel):

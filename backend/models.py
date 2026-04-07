@@ -3,7 +3,7 @@ from sqlalchemy.orm import relationship # type: ignore
 from database import Base
 import datetime
 
-# --- TABLES DE JOINTURE (Correction des noms en minuscules) ---
+# --- TABLES DE JOINTURE  ---
 
 etudiant_competence = Table('etudiant_competence', Base.metadata,
     Column('etudiant_id', Integer, ForeignKey('etudiant.user_id', ondelete="CASCADE")),

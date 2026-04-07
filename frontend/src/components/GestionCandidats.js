@@ -51,7 +51,7 @@ const GestionCandidats = ({ user }) => {
 
   return (
     <div className="space-y-8">
-      {/* SÉLECTION DE L'OFFRE (Bordeaux Style) */}
+      {/* SÉLECTION DE L'OFFRE  */}
       <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
           <label className="text-xs font-bold text-slate-400 uppercase tracking-widest flex items-center mb-2">
               <Briefcase className="w-4 h-4 mr-2 text-[#7d4b5e]"/> Sélectionner l'offre à examiner
@@ -111,7 +111,7 @@ const GestionCandidats = ({ user }) => {
         </table>
       </div>
 
-      {/* MODALE DÉTAILS (Bordeaux Style) */}
+      {/* MODALE DÉTAILS  */}
       {selectedCandidat && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={() => setSelectedCandidat(null)}>
           <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full p-8" onClick={e => e.stopPropagation()}>

@@ -6,7 +6,7 @@ import {
   MapPin, Globe, GraduationCap 
 } from 'lucide-react';
 
-// Tes composants
+// Les composants
 import Navbar from './Home/Navbar';
 import Hero from './Home/Hero';
 import Login from './Home/Login';
@@ -16,8 +16,6 @@ import Contact from './Home/Contact';
 import EspaceEtudiant from './Home/EspaceEtudiant';
 import MesCandidatures from './Home/MesCandidatures';
 import MonProfil from './Home/MonProfil';
-
-// Les composants de Salma
 import AjouterOffre from './components/AjouterOffre';
 import GestionCandidats from './components/GestionCandidats';
 import AdminPanel from './components/AdminPanel';

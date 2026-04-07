@@ -12,7 +12,7 @@ models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="PFE API")
 
-# --- CONFIGURATION CORS CORRIGÉE ---
+# --- CONFIGURATION CORS  ---
 origins = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
@@ -27,7 +27,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# ON INCLUT TES ROUTES
+# LES ROUTES
 app.include_router(entreprise.router)
 app.include_router(admin.router)
 app.include_router(auth.router)

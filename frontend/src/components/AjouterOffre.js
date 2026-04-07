@@ -8,16 +8,13 @@ const AjouterOffre = ({ userId }) => {
     description: '', 
     ville: '', 
     duree: '', 
-    competences_ids: [1] // Assure-toi que l'ID 1 existe dans ta table competence
+    competences_ids: [1] 
   });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     
     try {
-      // --- LA CORRECTION EST ICI ---
-      // On envoie le 'form' dans le corps (body) 
-      // ET le 'userId' dans les paramètres (params) pour correspondre au Swagger
       await axios.post('http://127.0.0.1:8000/entreprise/offres/', form, {
         params: {
           entreprise_id: userId
